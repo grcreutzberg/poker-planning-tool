@@ -1,6 +1,11 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+//https://www.npmjs.com/package/prisma-erd-generators
+generator erd {
+  provider = "prisma-erd-generator"
+}
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,19 +16,28 @@ datasource db {
 }
 
 model Game {
-  id   String @id @default(uuid())
-  name String
+  id     String  @id @default(uuid())
+  name   String
+  code   String  @unique
+  result String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  players Player[]
 
   @@map("games")
-  Player Player[]
 }
 
 model Player {
-  id     String @id @default(uuid())
+  id     String  @id @default(uuid())
   name   String
-  value  Int
-  game   Game   @relation(fields: [gameId], references: [id])
+  value  String?
+  game   Game    @relation(fields: [gameId], references: [id])
   gameId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("players")
 }
